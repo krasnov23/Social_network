@@ -11,15 +11,18 @@ class HelloController extends AbstractController
     private array $messages = ['Hello','Bye','Hi','Try'];
 
     // После знака вопроса указывается значение по умолчанию которое будет грузиться в исполнении ниже в случае если
-    // Никакого значения не будет заданно
-    // Если будет указанно 1 - будет выведенно Hello
-    // Если будет указанно 2 - будет выведенно Hello,Bye
+    // Никакого значения не будет заданно после слыша
     #[Route('/{limit?3}',name: 'app_index')]
     public function index(int $limit): Response
     {
+        // Первый агрумент внутри метода render это адрес нашего шаблона относительно папки templates
+        // второй элемент это массив с переменными которые будет передавать в данный шаблон
         return $this->render('hello/index.html.twig',
             // Выводит массив с 0 символа если $limit = 1 , только нулевой, если 2 то нулевой и первый и так далее
-            ['messages'=> array_slice($this->messages,0, $limit)]);
+            // Для этого мы вводим термин slice внутри index.html,
+            // т.е берем срез с нулевого по конкретный, который будет передан в ключе limit
+            ['messages'=> $this->messages,
+            'limit' => $limit]);
     }
     // Шаблон base.html.twig встраивается в index.html.twig внутрь тега body
 
