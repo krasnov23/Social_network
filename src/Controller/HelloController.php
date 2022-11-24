@@ -1,31 +1,41 @@
 <?php
 
-namespace MainApp\Controller;
+namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class HelloController
+class HelloController extends AbstractController
 {
     private array $messages = ['Hello','Bye','Hi','Try'];
 
-
-    // После знака вопроса указывается максимальный лимит который может в данном случае выдаваться в нашем массиве.
+    // После знака вопроса указывается значение по умолчанию которое будет грузиться в исполнении ниже в случае если
+    // Никакого значения не будет заданно
     // Если будет указанно 1 - будет выведенно Hello
     // Если будет указанно 2 - будет выведенно Hello,Bye
-    #[Route('/{limit<\d+>?3}',name: 'app_index')]
+    #[Route('/{limit?3}',name: 'app_index')]
     public function index(int $limit): Response
     {
-        // Выводит срез массива в виде строки
-        return new Response(implode(',',array_slice($this->messages,0, $limit)));
+        return $this->render('hello/index.html.twig',
+            // Выводит срез массива в виде строки
+            ['message'=>implode(',',array_slice($this->messages,0, $limit))]);
     }
+    // Шаблон base.html.twig встраивается в index.html.twig внутрь тега body
 
     // Данный путь выводит на каждый из элементов в id
     // строчка <\d+> - Означает что
     #[Route("/messages/{id<\d+>}",name: 'app_show_one')]
     public function showOne(int $id): Response
     {
-        return new Response($this->messages[$id]);
+        // $this->render указывает путь к шаблону
+        // путь указывается относительно папки templates
+        // Второй аргумент задается в виде массива который будет передаваться в виде данных в данный шаблон
+        return $this->render(
+          'hello/show_one.html.twig',
+            ['message' => $this->messages[$id]]
+        );
+        //return new Response('<b>' . $this->messages[$id] . '</b>');
     }
 
 
