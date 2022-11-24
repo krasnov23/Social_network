@@ -1,5 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div>The current block is </div>
 <div>
     <b>
-        {{ message }}
+        {{ message.message }}
     </b>
 </div>
+{% endblock %}

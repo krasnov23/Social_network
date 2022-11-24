@@ -8,7 +8,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HelloController extends AbstractController
 {
-    private array $messages = ['Hello','Bye','Hi','Try'];
+    private array $messages = [['message' => 'Hello', 'created' => '2022/06/12'],
+    ['message' => 'Hi', 'created' => '2022/04/12'],
+    ['message' => 'Bye!', 'created' => '2021/05/12']];
 
     // После знака вопроса указывается значение по умолчанию которое будет грузиться в исполнении ниже в случае если
     // Никакого значения не будет заданно после слыша
