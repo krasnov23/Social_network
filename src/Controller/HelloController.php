@@ -18,8 +18,8 @@ class HelloController extends AbstractController
     public function index(int $limit): Response
     {
         return $this->render('hello/index.html.twig',
-            // Выводит срез массива в виде строки
-            ['message'=>implode(',',array_slice($this->messages,0, $limit))]);
+            // Выводит массив с 0 символа если $limit = 1 , только нулевой, если 2 то нулевой и первый и так далее
+            ['messages'=> array_slice($this->messages,0, $limit)]);
     }
     // Шаблон base.html.twig встраивается в index.html.twig внутрь тега body
 
