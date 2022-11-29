@@ -13,7 +13,7 @@ class HelloController extends AbstractController
     ['message' => 'Bye!', 'created' => '2021/05/12']];
 
     // После знака вопроса указывается значение по умолчанию которое будет грузиться в исполнении ниже в случае если
-    // Никакого значения не будет заданно после слыша
+    // Никакого значения не будет заданно после слэша
     #[Route('/{limit?3}',name: 'app_index')]
     public function index(int $limit): Response
     {
