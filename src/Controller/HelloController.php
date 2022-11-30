@@ -14,7 +14,7 @@ class HelloController extends AbstractController
 
     // После знака вопроса указывается значение по умолчанию которое будет грузиться в исполнении ниже в случае если
     // Никакого значения не будет заданно после слэша
-    #[Route('/{limit?3}',name: 'app_index')]
+    #[Route('/{limit<\d+>?3}',name: 'app_index')]
     public function index(int $limit): Response
     {
         // Первый агрумент внутри метода render это адрес нашего шаблона относительно папки templates
