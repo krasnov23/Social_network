@@ -19,12 +19,17 @@ class MicroPostController extends AbstractController
         ]);
     }
 
-    #[Route('/micro-post/{id<\d+>}', name: 'app_micro_post_show')]
-    public function showOne($id, MicroPostRepository $posts): Response
+    // В переменную пост Вставляется номер поста и по айди выводятся соответственные данные
+    #[Route('/micro-post/{post}', name: 'app_micro_post_show')]
+    public function showOne(MicroPost $post): Response
     {
-        $currentPost = $posts->find($id);
-        dd($currentPost);
-        return $this->render('micro');
+        // Команда для упрощения работы с выделенным айди
+        // composer require sensio/framework-extra-bundle
+        dd($post);
+        //return $this->render('micro');
+        // https://symfony.com/bundles/SensioFrameworkExtraBundle/current/index.html
+        // Также мы можем указать любое из свойств класса и по введению в адрес имени этого свойства будет выведен нужный нам объект
+        // Как и по id (Например: title)
     }
 
     // Находит все записи в таблице
