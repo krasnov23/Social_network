@@ -6,6 +6,7 @@ use App\Entity\MicroPost;
 use App\Repository\MicroPostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -31,7 +32,7 @@ class MicroPostController extends AbstractController
     }
 
     #[Route('/micro-post/add', name: 'app_micro_post_add',priority: 2)]
-    public function add(): Response
+    public function add(Request $request,MicroPostRepository $posts): Response
     {
         $microPost = new MicroPost();
         // Подготовка класса к созданию формы, добавление полей поля должны соответствовать свойствам класса
@@ -39,6 +40,21 @@ class MicroPostController extends AbstractController
             ->add('title')->add('text')->add('submit',SubmitType::class,
                 ['label' => 'Save'])->getForm();
         // label - атрибут обозначения кнопки submit
+
+        // данный метод получает данные которые будут отправлены во время запроса(т.е ввода данных)
+        $form->handleRequest($request);
+
+        // Проверка на то что форма подтверждена и соответствует условиям
+        if ($form->isSubmitted() and $form->isValid())
+        {
+            $post = $form->getData();
+            // Задает объекту класса MicroPost свойству created время которое сейчас
+            $post->setCreated(new \DateTime());
+            // dd($post);
+            // Отправляет данные в MicroPostRepository откуда они уже поступают в БД
+            $posts->save($post,true);
+        }
+
 
         // Передача формы в шаблон, в шаблоне переменная form вставляет в функцию для форм form
         return $this->renderForm("micro_post/add.html.twig",
