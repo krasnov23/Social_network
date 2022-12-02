@@ -50,9 +50,17 @@ class MicroPostController extends AbstractController
             $post = $form->getData();
             // Задает объекту класса MicroPost свойству created время которое сейчас
             $post->setCreated(new \DateTime());
-            // dd($post);
+
             // Отправляет данные в MicroPostRepository откуда они уже поступают в БД
             $posts->save($post,true);
+
+            // Добавление уведомления "Успешно"
+            $this->addFlash('success','Your micropost had been added');
+
+            // Переход на следующую страницу после подтверждения формы
+            return $this->redirectToRoute('app_micro_post');
+            // Также можно сделать переход по следующему адресу return $this->redirect('/micro-post')
+
         }
 
 
