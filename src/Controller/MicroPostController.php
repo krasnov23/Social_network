@@ -37,8 +37,8 @@ class MicroPostController extends AbstractController
         $microPost = new MicroPost();
         // Подготовка класса к созданию формы, добавление полей поля должны соответствовать свойствам класса
         $form = $this->createFormBuilder($microPost)
-            ->add('title')->add('text')->add('submit',SubmitType::class,
-                ['label' => 'Save'])->getForm();
+            ->add('title')->add('text')->getForm();//->add('submit',SubmitType::class,
+                //['label' => 'Save'])->getForm();
         // label - атрибут обозначения кнопки submit
 
         // данный метод получает данные которые будут отправлены во время запроса(т.е ввода данных)
