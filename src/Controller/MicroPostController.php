@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\MicroPost;
+use App\Form\MicroPostType;
 use App\Repository\MicroPostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -36,8 +37,8 @@ class MicroPostController extends AbstractController
     {
         $microPost = new MicroPost();
         // Подготовка класса к созданию формы, добавление полей поля должны соответствовать свойствам класса
-        $form = $this->createFormBuilder($microPost)
-            ->add('title')->add('text')->getForm();//->add('submit',SubmitType::class,
+        $form = $this->createForm(MicroPostType::class,$microPost);
+        //->add('submit',SubmitType::class,
                 //['label' => 'Save'])->getForm();
         // label - атрибут обозначения кнопки submit
 
@@ -63,11 +64,40 @@ class MicroPostController extends AbstractController
 
         }
 
-
         // Передача формы в шаблон, в шаблоне переменная form вставляет в функцию для форм form
         return $this->renderForm("micro_post/add.html.twig",
         ["forma" => $form]);
 
+    }
+
+    #[Route('/micro-post/{post}/edit', name: 'app_micro_post_edit')]
+    public function edit(MicroPost $post,Request $request,MicroPostRepository $posts): Response
+    {
+
+        $form = $this->createForm(MicroPostType::class,$post);
+
+        // данный метод получает данные которые будут отправлены во время запроса(т.е ввода данных)
+        $form->handleRequest($request);
+
+        // Проверка на то что форма подтверждена и соответствует условиям
+        if ($form->isSubmitted() and $form->isValid())
+        {
+            $post = $form->getData();
+            // Получает данные в MicroPostRepository откуда они уже поступают в Поле
+            $posts->save($post,true);
+
+            // Добавление уведомления "Успешно"
+            $this->addFlash('success','Your micropost had been updated');
+
+            // Переход на следующую страницу после подтверждения формы
+            return $this->redirectToRoute('app_micro_post');
+            // Также можно сделать переход по следующему адресу return $this->redirect('/micro-post')
+
+        }
+
+        // Передача формы в шаблон, в шаблоне переменная form вставляет в функцию для форм form
+        return $this->renderForm("micro_post/edit.html.twig",
+            ["forma" => $form]);
 
     }
 
