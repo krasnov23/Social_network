@@ -1,4 +1,5 @@
-{{ form_start(forma) }}
+{# атрибут новалид новалидат дает возможность не заполнять обязательные поля, но при нажатии Сабмит Выдаст ошибку уже на странице перехода #}
+{{ form_start(forma,{'attr':{'novalidate':'novalidate'}}) }}
 <div>{{ form_errors(forma) }}</div>
 
 <div>
@@ -10,7 +11,7 @@
 <div>
     {{ form_label(forma.text,'Please enter the post',{'label_attr':{'class':'block text-sm text-gray-700 dark:text-gray-300'}})}}
     {{ form_widget(forma.text,{'attr':{'class':'block w-full shadow-sm border-gray-300 dark:border-transparent dark:text-gray-800 rounded-md border'}})}}
-    {{ form_errors(forma.title) }}
+    {{ form_errors(forma.text) }}
 </div>
 <div>
     <button type="submit" class="block w-full shadow-sm border-transparent bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 text-white rounded-md border p-2 mt-4 mb-2">Send Data</button>
