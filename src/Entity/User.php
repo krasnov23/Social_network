@@ -27,6 +27,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    // значение remove в параметре каскад означает что при удалении объекта
+    // ряда в таблице узер он автоматически удалит ряд в UserProfile
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?UserProfile $yes = null;
 

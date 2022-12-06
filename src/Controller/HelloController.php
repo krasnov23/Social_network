@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Entity\UserProfile;
+use App\Repository\UserProfileRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,9 +17,23 @@ class HelloController extends AbstractController
 
     // После знака вопроса указывается значение по умолчанию которое будет грузиться в исполнении ниже в случае если
     // Никакого значения не будет заданно после слэша
-    #[Route('/{limit<\d+>?3}',name: 'app_index')]
-    public function index(int $limit): Response
+    #[Route('/',name: 'app_index')]
+    public function index(UserProfileRepository $profiles): Response
     {
+        /*$user = new User();
+        $user->setEmail('example@email.com');
+        $user->setPassword('1234567890');*/
+        // переменная profile находится в отношении к классу User 1:1 и без создания класса User
+        //
+        /*$profile = new UserProfile();
+        $profile->setUser($user);
+        $profiles->save($profile,true);*/
+
+        // Находит и удаляет один из профилей (Соответственно удаляется как User так и UserProfile
+        // т.к данные сущности не могут существовать друг без друга
+        /*$profile = $profiles->find(1);
+        $profiles->remove($profile,true);*/
+
         // Первый агрумент внутри метода render это адрес нашего шаблона относительно папки templates
         // второй элемент это массив с переменными которые будет передавать в данный шаблон
         return $this->render('hello/index.html.twig',
@@ -24,7 +41,7 @@ class HelloController extends AbstractController
             // Для этого мы вводим термин slice внутри index.html,
             // т.е берем срез с нулевого по конкретный, который будет передан в ключе limit
             ['messages'=> $this->messages,
-            'limit' => $limit]);
+            'limit' => 3]);
     }
     // Шаблон base.html.twig встраивается в index.html.twig внутрь тега body
 
