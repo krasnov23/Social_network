@@ -27,15 +27,18 @@ class HelloController extends AbstractController
     {
 
         // Для того чтобы создать MicroPost и Comment по отдельности нам не нужен дополнительный параметр cascade->persist
-        $post = new MicroPost();
+        /*$post = new MicroPost();
         $post->setTitle('Hello');
         $post->setText('Hello its me');
-        $post->setCreated(new \DateTime());
+        $post->setCreated(new \DateTime());*/
+
+        $post = $posts->find(11);
 
         $comment = new Comment();
-        $comment->setText('First Comment');
-        $post->addComment($comment);
-        $posts->save($post,true);
+        $comment->setText('Second Comment');
+        $comment->setMicroPost($post);
+        //$post->addComment($comment);
+        $comments->save($comment,true);
 
         /*$user = new User();
         $user->setEmail('example@email.com');
