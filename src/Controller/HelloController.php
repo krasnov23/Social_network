@@ -2,12 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
+use App\Entity\MicroPost;
 use App\Entity\User;
 use App\Entity\UserProfile;
+use App\Repository\CommentRepository;
+use App\Repository\MicroPostRepository;
 use App\Repository\UserProfileRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class HelloController extends AbstractController
 {
@@ -18,8 +23,20 @@ class HelloController extends AbstractController
     // После знака вопроса указывается значение по умолчанию которое будет грузиться в исполнении ниже в случае если
     // Никакого значения не будет заданно после слэша
     #[Route('/',name: 'app_index')]
-    public function index(UserProfileRepository $profiles): Response
+    public function index(MicroPostRepository $posts,CommentRepository $comments): Response
     {
+
+        // Для того чтобы создать MicroPost и Comment по отдельности нам не нужен дополнительный параметр cascade->persist
+        $post = new MicroPost();
+        $post->setTitle('Hello');
+        $post->setText('Hello its me');
+        $post->setCreated(new \DateTime());
+
+        $comment = new Comment();
+        $comment->setText('First Comment');
+        $post->addComment($comment);
+        $posts->save($post,true);
+
         /*$user = new User();
         $user->setEmail('example@email.com');
         $user->setPassword('1234567890');*/

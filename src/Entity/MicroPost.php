@@ -32,7 +32,8 @@ class MicroPost
     private ?\DateTimeInterface $created = null;
 
     // Свойство orphanRemoval true означает что когда каждый пост будет удален комментарии будут удалены вместе с постом
-    #[ORM\OneToMany(mappedBy: 'microPost', targetEntity: Comment::class, orphanRemoval: true)]
+    // cascade persist позволяет создать пост и комментарий в одно и то же время
+    #[ORM\OneToMany(mappedBy: 'microPost', targetEntity: Comment::class, orphanRemoval: true,cascade: ['persist'])]
     private Collection $comments;
 
     public function __construct()
