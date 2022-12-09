@@ -32,17 +32,17 @@ class HelloController extends AbstractController
         $post->setText('Hello its me');
         $post->setCreated(new \DateTime());*/
 
-        $post = $posts->find(11);
+        //$post = $posts->find(11);
         // Симфони знает что если у нас есть класс, параметр в котором в отношении один ко многим
         // Дает нам доступ к дополнительным методам которым мы можем использовать с данными
         //$post->getComments()->count();
         // Получаем первый комментарий к текущему посту
-        $firstComment = $post->getComments()[0];
+        //$firstComment = $post->getComments()[0];
         // Удаляем текущий комментарий из поста
-        $post->removeComment($firstComment);
+        //$post->removeComment($firstComment);
 
         // Сохраняет имеющийся пост
-        $posts->save($post,true);
+        //$posts->save($post,true);
 
         /*$comment = new Comment();
         $comment->setText('Second Comment');

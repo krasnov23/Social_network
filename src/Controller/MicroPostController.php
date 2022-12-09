@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\MicroPost;
+use App\Form\CommentType;
 use App\Form\MicroPostType;
+use App\Repository\CommentRepository;
 use App\Repository\MicroPostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -18,7 +21,7 @@ class MicroPostController extends AbstractController
     public function index(MicroPostRepository $posts): Response
     {
         return $this->render('micro_post/index.html.twig', [
-            'posts' => $posts->findAll(),
+            'posts' => $posts->findAllWithComments(),
         ]);
     }
 
@@ -97,9 +100,48 @@ class MicroPostController extends AbstractController
 
         // Передача формы в шаблон, в шаблоне переменная form вставляет в функцию для форм form
         return $this->renderForm("micro_post/edit.html.twig",
-            ["forma" => $form]);
+            ["forma" => $form,
+             "post" => $post]);
 
     }
+
+
+    #[Route('/micro-post/{post}/comment', name: 'app_micro_post_comment')]
+    public function addComment(MicroPost $post,Request $request,CommentRepository $comments): Response
+    {
+
+        $form = $this->createForm(CommentType::class,new Comment());
+        $form->handleRequest($request);
+
+        // Проверка на то что форма подтверждена и соответствует условиям
+        if ($form->isSubmitted() and $form->isValid())
+        {
+            // Получает данные формы
+            $comment = $form->getData();
+
+            // Задает пост текущему комментарию
+            $comment->setMicroPost($post);
+
+            // Получает данные в MicroPostRepository откуда они уже поступают в Поле
+            $comments->save($comment,true);
+
+            // Добавление уведомления "Успешно"
+            $this->addFlash('success','Your comment had been updated');
+
+            // Переход на следующую страницу после подтверждения формы
+            return $this->redirectToRoute('app_micro_post_show',['post'=> $post->getId()]);
+            // Также можно сделать переход по следующему адресу return $this->redirect('/micro-post')
+
+        }
+
+        // Передача формы в шаблон, в шаблоне переменная form вставляет в функцию для форм form
+        return $this->renderForm("micro_post/comment.html.twig",
+            ["forma" => $form,
+             "post" => $post]);
+
+    }
+
+
 
     // Команда для упрощения работы с выделенным айди
     // composer require sensio/framework-extra-bundle

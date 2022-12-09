@@ -35,11 +35,18 @@ class MicroPost
     // cascade persist позволяет создать пост и комментарий в одно и то же время
     // fetch:Eager отображает в массиве все комментарии в свойстве комментс, в случае если стоит LAZY не отображает
     #[ORM\OneToMany(mappedBy: 'microPost', targetEntity: Comment::class, orphanRemoval: true,cascade: ['persist'],fetch: 'EAGER')]
+    // По скольку свойство комментс является коллекцией он наследует в себя разные методы например count
+    // Смотреть в Collection -> Implementations -> AbstractLazyCollection
     private Collection $comments;
+
+
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'liked')]
+    private Collection $likedBy;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->likedBy = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,6 +119,30 @@ class MicroPost
                 $comment->setMicroPost(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getLikedBy(): Collection
+    {
+        return $this->likedBy;
+    }
+
+    public function addLikedBy(User $likedBy): self
+    {
+        if (!$this->likedBy->contains($likedBy)) {
+            $this->likedBy->add($likedBy);
+        }
+
+        return $this;
+    }
+
+    public function removeLikedBy(User $likedBy): self
+    {
+        $this->likedBy->removeElement($likedBy);
 
         return $this;
     }
