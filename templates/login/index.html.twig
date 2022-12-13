@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+
+{% block bread %}
+-> Login
+{% endblock %}
+
+{% block body %}
+    <form action="{{ path('app_login') }}" method="post">
+        <div>
+            {# Симфони просто перехватывает тут данные поэтому мы создали просто HTML форму без добавления каких-либо #}
+            {# дополнительных форм #}
+            {# по полю _username симфони может перехватить запрос и выяснить какое поле содерджит username для проверки #}
+            <label class="block text-sm text-gray-700 dark:text-gray-300 font-medium">Email</label>
+            <input  class="block w-full shadow-sm border-gray-300 dark:border-transparent dark:text-gray-800 rounded-md border" type="text" name="_username" value="{{ lastUsername }}">
+        </div>
+        <div>
+            <label class="block text-sm text-gray-700 dark:text-gray-300 font-medium" >Password</label>
+            <input class="block w-full shadow-sm border-gray-300 dark:border-transparent dark:text-gray-800 rounded-md border" type="password" name="_password" />
+        </div>
+        {# Тип хайден что-то что будет отправленно по форме но не будет отображаться в ней #}
+        {# в колонке value можем вводить также path или url в который будет перенаправлен пользователь #}
+        <input type="hidden" name="_target_path" value="/micro-post">
+        <button type="submit" class="block w-full shadow-sm border-transparent bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 text-white rounded-md border p-2 mt-4 mb-2" >Login</button>
+    </form>
+{% endblock %}
+
+
