@@ -22,6 +22,12 @@ security:
                 # маршрут, по которому все учетные данные будут отправлены с этого форума для проверки
                 check_path: app_login
 
+            logout:
+                # путь в котором будет происходить выход из аккаунта
+                path: app_logout
+                # Пользователь будет перенаправлен в случае выхода из аккаунта
+                target: app_login
+
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
