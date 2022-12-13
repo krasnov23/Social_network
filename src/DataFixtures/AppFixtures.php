@@ -37,6 +37,7 @@ class AppFixtures extends Fixture
         $microPost1->setTitle('Welcome to Kazakhstan, bitches!');
         $microPost1->setText('Welcome to Kazakhstan, bitches!');
         $microPost1->setCreated(new DateTime());
+        $microPost1->setAuthor($user1);
         // Добавить новую строку в таблицу
         $manager->persist($microPost1);
 
@@ -44,6 +45,7 @@ class AppFixtures extends Fixture
         $microPost2->setTitle('Welcome to US, bitches!');
         $microPost2->setText('Welcome to US, bitches!');
         $microPost2->setCreated(new DateTime());
+        $microPost2->setAuthor($user1);
         // Добавить новую строку в таблицу
         $manager->persist($microPost2);
 
@@ -52,6 +54,7 @@ class AppFixtures extends Fixture
         $microPost3->setText('Welcome to Russia, bitches!');
         $microPost3->setCreated(new DateTime());
         // Добавить новую строку в таблицу
+        $microPost3->setAuthor($user2);
         $manager->persist($microPost3);
 
         // Исполнить запрос
