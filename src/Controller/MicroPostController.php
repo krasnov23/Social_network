@@ -38,6 +38,7 @@ class MicroPostController extends AbstractController
     #[Route('/micro-post/add', name: 'app_micro_post_add',priority: 2)]
     public function add(Request $request,MicroPostRepository $posts): Response
     {
+        //dd($this->getUser());
         $microPost = new MicroPost();
         // Подготовка класса к созданию формы, добавление полей поля должны соответствовать свойствам класса
         $form = $this->createForm(MicroPostType::class,$microPost);
@@ -54,6 +55,8 @@ class MicroPostController extends AbstractController
             $post = $form->getData();
             // Задает объекту класса MicroPost свойству created время которое сейчас
             $post->setCreated(new \DateTime());
+
+            $post->setAuthor($this->getUser());
 
             // Отправляет данные в MicroPostRepository откуда они уже поступают в БД
             $posts->save($post,true);
@@ -121,6 +124,10 @@ class MicroPostController extends AbstractController
 
             // Задает пост текущему комментарию
             $comment->setMicroPost($post);
+
+            // Задаем Автора комментарию
+            $comment->setAuthor($this->getUser());
+
 
             // Получает данные в MicroPostRepository откуда они уже поступают в Поле
             $comments->save($comment,true);
