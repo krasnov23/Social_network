@@ -8,6 +8,7 @@ use App\Form\CommentType;
 use App\Form\MicroPostType;
 use App\Repository\CommentRepository;
 use App\Repository\MicroPostRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,9 +36,18 @@ class MicroPostController extends AbstractController
 
     }
 
+    // Еще один из вариантов ограничения доступа к чему либо внизу (Ограничивает доступ немедленно)
+    // #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/micro-post/add', name: 'app_micro_post_add',priority: 2)]
     public function add(Request $request,MicroPostRepository $posts): Response
     {
+        //  Метод не дающий доступ к странице до тех пор, пока не пройдена авторизация
+        //  Будет перенаправлен на страницу Авторизации
+        $this->denyAccessUnlessGranted(
+            'IS_AUTHENTICATED_FULLY'
+            // Дает доступ ко всем
+            // 'PUBLIC_ACCESS'
+        );
         //dd($this->getUser());
         $microPost = new MicroPost();
         // Подготовка класса к созданию формы, добавление полей поля должны соответствовать свойствам класса
