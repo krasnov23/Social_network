@@ -36,18 +36,19 @@ class MicroPostController extends AbstractController
 
     }
 
-    // Еще один из вариантов ограничения доступа к чему либо внизу (Ограничивает доступ немедленно)
-    // #[IsGranted('IS_AUTHENTICATED_FULLY')]
+
+    //#[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/micro-post/add', name: 'app_micro_post_add',priority: 2)]
     public function add(Request $request,MicroPostRepository $posts): Response
     {
+        // Еще один из вариантов ограничения доступа к чему либо внизу (Ограничивает доступ немедленно)
         //  Метод не дающий доступ к странице до тех пор, пока не пройдена авторизация
         //  Будет перенаправлен на страницу Авторизации
-        $this->denyAccessUnlessGranted(
-            'IS_AUTHENTICATED_FULLY'
+        //$this->denyAccessUnlessGranted(
+            //'IS_AUTHENTICATED_FULLY'
             // Дает доступ ко всем
             // 'PUBLIC_ACCESS'
-        );
+        //);
         //dd($this->getUser());
         $microPost = new MicroPost();
         // Подготовка класса к созданию формы, добавление полей поля должны соответствовать свойствам класса

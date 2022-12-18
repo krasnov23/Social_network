@@ -32,6 +32,8 @@
                 <div class="text-sm text-gray 400 dark:text-gray-500">
                     {# Глобальная переменная app #}
                     {# Цикл ниже означает что если пользователь авторизован то отображается кнопка Add new если нет то Login #}
+                    {# Указанный ниже коммент обозначает тоже самое что и app.user #}
+                    {# if is_granted('IS_AUTHENTICATED_FULLY') #}
                     {% if app.user %}
                     <div>
                         <a href="{{ path('app_micro_post_add') }}">Add new</a>
