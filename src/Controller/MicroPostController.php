@@ -88,7 +88,7 @@ class MicroPostController extends AbstractController
 
     }
 
-    #[IsGranted('ROLE_EDITOR')]
+    //#[IsGranted('ROLE_EDITOR')]
     #[Route('/micro-post/{post}/edit', name: 'app_micro_post_edit')]
     public function edit(MicroPost $post,Request $request,MicroPostRepository $posts): Response
     {
@@ -121,7 +121,7 @@ class MicroPostController extends AbstractController
 
     }
 
-    #[IsGranted('ROLE_COMMENTER')]
+    //#[IsGranted('ROLE_COMMENTER')]
     #[Route('/micro-post/{post}/comment', name: 'app_micro_post_comment')]
     public function addComment(MicroPost $post,Request $request,CommentRepository $comments): Response
     {

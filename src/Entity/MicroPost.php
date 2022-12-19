@@ -49,6 +49,7 @@ class MicroPost
 
     public function __construct()
     {
+        $this->created = new \DateTime();
         $this->comments = new ArrayCollection();
         $this->likedBy = new ArrayCollection();
     }
