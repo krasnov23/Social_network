@@ -26,8 +26,13 @@ class MicroPostController extends AbstractController
         ]);
     }
 
+
     // В переменную пост Вставляется номер поста и по айди выводятся соответственные данные
     #[Route('/micro-post/{post}', name: 'app_micro_post_show')]
+    // Проверяет выполняет ли пользователь операцию VIEW над объектом post
+    // 'post' имя аргумента $post
+    // В данном случае элемент пост, проходит через действие VIEW в MicroPostVoter
+    #[IsGranted(MicroPost::VIEW,'post')]
     public function showOne(MicroPost $post): Response
     {
 
@@ -89,6 +94,7 @@ class MicroPostController extends AbstractController
     }
 
     //#[IsGranted('ROLE_EDITOR')]
+    #[IsGranted(MicroPost::EDIT,'post')]
     #[Route('/micro-post/{post}/edit', name: 'app_micro_post_edit')]
     public function edit(MicroPost $post,Request $request,MicroPostRepository $posts): Response
     {
@@ -97,6 +103,9 @@ class MicroPostController extends AbstractController
 
         // данный метод получает данные которые будут отправлены во время запроса(т.е ввода данных)
         $form->handleRequest($request);
+
+        // Ограничение доступа для неавторизованных пользователей
+        $this->denyAccessUnlessGranted(MicroPost::EDIT,$post);
 
         // Проверка на то что форма подтверждена и соответствует условиям
         if ($form->isSubmitted() and $form->isValid())
