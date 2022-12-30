@@ -41,15 +41,20 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            // Значение entity manager по сути аналогично свойству save которое используется в адресе нашего /micro-post/add
             $entityManager->persist($user);
             $entityManager->flush();
 
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
+                    // Письмо приходит от accounts@micropost.com, тема письма MicroPost Symfony6
                     ->from(new Address('accounts@micropost.com', 'MicroPost Symfony6'))
+                    // Получает введенный емейл на который будет отправлено наше письмо
                     ->to($user->getEmail())
+                    // Заголовок в начале письма
                     ->subject('Please Confirm your Email')
+                    // Адрес страницы с сообщением подтверждения
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
             // do anything else you need here, like send an email
@@ -65,6 +70,7 @@ class RegistrationController extends AbstractController
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request): Response
     {
+        // Строчка означает что При подтверждении email должен быть выполнен вход в аккаунт на сайте
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         // validate email confirmation link, sets User::isVerified=true and persists

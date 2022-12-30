@@ -6,6 +6,7 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -32,12 +33,26 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('plainPassword', PasswordType::class, [
+            // Для того чтобы создать поле подтверждение пароля меняем PasswordType на RepeatedType
+            ->add('plainPassword', RepeatedType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
-                // mapped => false означает непривязанный
+                // Тип за которым будет повторять строка RepeatedType
+                'type' => PasswordType::class,
+                // mapped => false означает непривязанный к свойству какой либо сущности
                 'mapped' => false,
+                // Сообщение которое будет отображенно если пароли не совпадают
+                'invalid_message' => 'The password field must match',
                 'attr' => ['autocomplete' => 'new-password'],
+                'first_options' => [
+                    'label' => 'Passwords',
+                    'mapped' => false
+                ],
+                'second_options' =>
+                [
+                    'label' => 'Repeated password',
+                    'mapped' => false
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter a password',
