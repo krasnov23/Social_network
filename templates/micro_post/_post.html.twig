@@ -12,9 +12,17 @@
         {{ post.created|date("M j, Y") }}
     </div>
     <div>
-        <a href="#">
-            Like <span class="px-2 rounded-md bg-gray-200 dark:bg-gray-700">0</span>
+        {# Если пользователь лайкнул то появляетя кнопка Unlike#}
+        {% if post.likedBy.contains(app.user) %}
+        <a href="{{ path('app_unlike',{id: post.id}) }}">
+            Unlike <span class="px-2 rounded-md bg-gray-200 dark:bg-gray-700">{{ post.likedBy.count }}</span>
         </a>
+        {% else %}
+        {# Считает количество добавленных пользователей к лайку поста  #}
+        <a href="{{ path('app_like',{id: post.id}) }}">
+            Like <span class="px-2 rounded-md bg-gray-200 dark:bg-gray-700">{{ post.likedBy.count }}</span>
+        </a>
+        {% endif %}
     </div>
     <div class="text-sm text-gray-500 dark:text-gray-400">
         {# через объект пост свойство автор попадаем в класс Автор в email #}
