@@ -13,6 +13,12 @@
 
 
     {{ form_start(registrationForm) }}
+        <div class="text-xl">
+            Basic Information
+        </div>
+        <div class="text-gray-500 mb-4 pb-4 border-b border-gray-300">
+            Enter your credentials
+        </div>
         <div>
         {{ form_label(registrationForm.email,'Username (email)',{'label_attr':{'class':'block text-sm text-gray-700 dark:text-gray-300'}})}}
         {{ form_widget(registrationForm.email,{'attr':{'class':'block w-full shadow-sm border-gray-300 dark:border-transparent dark:text-gray-800 rounded-md border p2 mt-1 mb-2'}})}}
@@ -37,6 +43,17 @@
             {{ form_label(registrationForm.agreeTerms, 'Agree to terms', {'label_attr' : {'class': 'text-sm text-gray-700 dark:text-gray-300 font-medium'}}) }}
             {{ form_errors(registrationForm.agreeTerms) }}
         </div>
+
+        <div class="border-b border-gray-300"></div>
+        <div class="text-xl mt-4">
+            Your Profile
+        </div>
+        <div class="text-gray-500 mb-4 pb-4 border-b border-gray-300">
+            Enter more (optional) details about yourself. You can do it later.
+        </div>
+
+        {# юзерпрофайл передается в форму как часть формы RegistrationFormType #}
+        {{ include('/settings_profile/_profile_form.html.twig',{ form: registrationForm.yes }) }}
 
         <div>
             <button type="submit"

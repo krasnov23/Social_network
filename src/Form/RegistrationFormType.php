@@ -64,8 +64,9 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
-            ])
-        ;
+                // Добавление всей формы с UserProfileType
+                // ['mapped' => false,]
+            ])->add('yes',UserProfileType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
