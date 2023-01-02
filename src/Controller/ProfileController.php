@@ -4,16 +4,18 @@ namespace App\Controller;
 
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ProfileController extends AbstractController
 {
     #[Route('/profile/{id}', name: 'app_profile')]
-    public function index(User $user): Response
+    public function index(User $user,Request $request): Response
     {
         return $this->render('profile/show.html.twig', [
             'user' => $user,
+            'currentUser' => $this->getUser()
         ]);
     }
 }
