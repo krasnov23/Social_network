@@ -37,6 +37,17 @@
         {% endif %}
     </div>
 </div>
+    {# С функцией embed можно определять блоки #}
+    {% embed 'shared/_tabs.html.twig' %}
+        {# У блока tabs свой встроенный стиль внутри шаблона _tabs #}
+        {% block tabs %}
+            {% embed 'shared/_tab.html.twig' with {route: 'app_profile'} %}
+                {% block content %}
+                    Posts <span class="px-2 rounded-md bg-gray-200 dark:bg-gray-700">{{ user.posts.count }}</span>
+                {% endblock %}
+            {% endembed %}
+        {% endblock %}
+    {% endembed %}
 
     <div class="mt-5">
     {# Отобразит посты только пользователя #}
