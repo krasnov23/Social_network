@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Profile → Follows {% endblock %}
+
+{% block bread %}
+    → User Profile → Follows
+{% endblock %}
+
+{% block body %}
+
+    {{ include('profile/_profile_head.html.twig') }}
+    {{ include('profile/_profile_buttons.html.twig') }}
+    {{ include('follower/_follower_list.html.twig',{ users:user.follows }) }}
+
+    <div class="mt-5">
+
+    </div>
+
+{% endblock %}
