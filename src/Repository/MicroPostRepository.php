@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\MicroPost;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -41,7 +43,11 @@ class MicroPostRepository extends ServiceEntityRepository
 
     public function findAllWithComments(): array
     {
-        // Ссылается на класс MicroPost
+
+        // заменяем запрос указанный ниже
+        return $this->findAllQuery(withComments: true)->getQuery()->getResult();
+
+        /*// Ссылается на класс MicroPost
         return $this->createQueryBuilder('p')
             // Добавляет комментарии к конечному результату
             ->addSelect('c')
@@ -50,7 +56,59 @@ class MicroPostRepository extends ServiceEntityRepository
             // Сортируем по свойству created
             ->orderBy('p.created','DESC')
             // гетКвери возвращает новый объект гет резалт конечный метод для получения этого объекта
+            ->getQuery()->getResult();*/
+
+    }
+
+    public function findAllByAuthors(int|User $author): array
+    {
+        // Запрос для отображения страницы конкретного пользователя и его постов для уменьшения количества отправляемых запросов
+        // Где автор если передается как экземпляр класса то получаем его айди, а если айди то получаем сразу айди напрямую
+        return $this->findAllQuery(withComments: true,withAuthors: true,withLikes: true,withProfiles: true)
+            ->where('p.author = :author')
+            ->setParameter('author',$author instanceof User ? $author->getId() : $author)
             ->getQuery()->getResult();
+    }
+
+    private function findAllQuery(
+        bool $withComments = false,
+        bool $withLikes = false,
+        bool $withAuthors = false,
+        bool $withProfiles = false,
+
+    ): QueryBuilder
+    {
+        $query = $this->createQueryBuilder('p');
+
+        if ($withComments)
+        {
+            $query->leftJoin('p.comments','c')
+                ->addSelect('c');
+        }
+
+        if ($withLikes)
+        {
+            $query->leftJoin('p.likedBy','l')
+                ->addSelect('l');
+        }
+
+
+        if ($withAuthors || $withProfiles)
+        {
+            $query->leftJoin('p.author','a')
+                ->addSelect('a');
+        }
+
+        if ($withProfiles)
+        {
+            // По скольку Профайл свойство класса User, а user это свойство author класса Micropost которое обозначается у нас
+            // в запросе выше как a. up - сокращенно UserProfile
+            $query->leftJoin('a.yes','up')
+                ->addSelect('up');
+        }
+
+
+        return $query->orderBy('p.created','DESC');
 
     }
 
