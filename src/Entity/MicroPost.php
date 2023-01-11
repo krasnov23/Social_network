@@ -37,7 +37,7 @@ class MicroPost
     // Свойство orphanRemoval true означает что когда каждый пост будет удален комментарии будут удалены вместе с постом
     // cascade persist позволяет создать пост и комментарий в одно и то же время
     // fetch:Eager отображает в массиве все комментарии в свойстве комментс, в случае если стоит LAZY не отображает
-    #[ORM\OneToMany(mappedBy: 'microPost', targetEntity: Comment::class, orphanRemoval: true,cascade: ['persist'],fetch: 'EAGER')]
+    #[ORM\OneToMany(mappedBy: 'microPost', targetEntity: Comment::class, orphanRemoval: true,cascade: ['persist'],/*fetch: 'EAGER'*/)]
     // По скольку свойство комментс является коллекцией он наследует в себя разные методы например count
     // Смотреть в Collection -> Implementations -> AbstractLazyCollection
     private Collection $comments;

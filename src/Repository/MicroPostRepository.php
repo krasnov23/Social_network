@@ -4,7 +4,10 @@ namespace App\Repository;
 
 use App\Entity\MicroPost;
 use App\Entity\User;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -48,16 +51,48 @@ class MicroPostRepository extends ServiceEntityRepository
         return $this->findAllQuery(withComments: true)->getQuery()->getResult();
 
         /*// Ссылается на класс MicroPost
+        // в скобках метода createQueryBuilder указан псевдоним который ссылается на текущую страницу
         return $this->createQueryBuilder('p')
             // Добавляет комментарии к конечному результату
             ->addSelect('c')
-            // Соединяем таблицу MicroPost c Comments по столбу comments
+            // Соединяем таблицу MicroPost c Comments по столбу comments (дали псевдоним "c")
+            // Если мы хотим чтобы добавились только те посты где есть комментарии
             ->leftJoin('p.comments','c')
-            // Сортируем по свойству created
+            // Сортируем по свойству created (Когда был выложен пост)
             ->orderBy('p.created','DESC')
             // гетКвери возвращает новый объект гет резалт конечный метод для получения этого объекта
             ->getQuery()->getResult();*/
 
+    }
+
+
+    // Наш объект Майкропост не имеет свойства подсчета комментариев
+    // поэтому мы используем агрегатные методы SQL
+    // В данном случае используем having вместо where
+    public function findAllWithMinLikes(int $minLikes)
+    {
+        // Включаем только посты в которых есть минимальное количество лайков в нашем случае больше 0.
+        // $idList Выдает список айдишников объектов в которых лайков больше чем в указанном параметре
+        $idList = $this->findAllQuery(withLikes: true)
+            // Выбираем только id
+            ->select('p.id')
+            // Группируем по id чтобы выдавало все id которые проходят под наш критерий
+            ->groupBy('p.id')
+            // Хотим получить только посты как минимум имеющие один лайк, используем l потому что добавляли l как likes в методе выше
+            // В данном случае используем having вместо where, т.к where не используется вместе с count.
+            ->having('COUNT(l) > :minLikes')
+            ->setParameter('minLikes',$minLikes)
+            ->getQuery()
+            // По скольку данный запрос нам выдаст только idшники (благодаря команде select id).
+            // Он выдаст нам массив с массивами в которых будет указан только id. Указанный параметр Скалар Колом.
+            // Выведет данные в виде одного массива с айдишниками
+            ->getResult(Query::HYDRATE_SCALAR_COLUMN);
+        // По скольку данный запрос будет выводить только по посту с указанием одного лайка и одного комментария это не совсем
+        // то что мы хотим в итоге
+
+        return $this->findAllQuery(
+            withComments: true,withProfiles: true,withLikes: true,withAuthors: true
+        )->where('p.id in (:idList)')->setParameter('idList',$idList)->getQuery()->getResult();
     }
 
     public function findAllByAuthors(int|User $author): array
@@ -68,6 +103,16 @@ class MicroPostRepository extends ServiceEntityRepository
             ->where('p.author = :author')
             ->setParameter('author',$author instanceof User ? $author->getId() : $author)
             ->getQuery()->getResult();
+    }
+
+    public function findAllPostsFromYourSubscribe(Collection|array $follows)
+    {
+
+        return $this->findAllQuery(withComments: true,withAuthors: true,withLikes: true,withProfiles: true)
+            ->where('p.author IN (:follows)')->setParameter('follows',$follows)
+            ->getQuery()->getResult();
+
+
     }
 
     private function findAllQuery(
