@@ -8,6 +8,7 @@
 
 {% block body %}
     {{ form_start(form) }}
+    {{ include('settings_profile/_settings_profile_tabs.html.twig') }}
     {{ include('settings_profile/_profile_form.html.twig') }}
     <div>
         <button type="submit"

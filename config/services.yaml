@@ -4,6 +4,13 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    # Внутри базы данных у нас находится сразу же название файла, единственная папка к которой браузер имеет доступ это
+    # Папка public и отображенный путь уже будет начинаться с нее, поэтому актуальная папка будет являться той папкой которая снизу
+    profiles: '/uploads/profiles/'
+    # %kernel.project_dir% главная директория нашего проекта (сервис параметр означающий папку в котором лежит наш проект)
+    # %profiles% - вставка того что указано в ключе proflies выше
+    profiles_directory: '%kernel.project_dir%/public%profiles%'
+    # затем переходим в twig.yaml и указываем глобальную переменную proflies которая будет доступна во всех его шаблонах
 
 services:
     # default configuration for services in *this* file
