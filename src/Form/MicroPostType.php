@@ -4,8 +4,10 @@ namespace App\Form;
 
 use App\Entity\MicroPost;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use function Sodium\add;
 
 class MicroPostType extends AbstractType
 {
@@ -13,7 +15,8 @@ class MicroPostType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('text');
+            ->add('text',TextareaType::class)
+            ->add('extraPrivacy');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

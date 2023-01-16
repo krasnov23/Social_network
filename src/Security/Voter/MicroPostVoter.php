@@ -61,11 +61,20 @@ class MicroPostVoter extends Voter
                 // return true or false
                 // Пользователь должен быть авторизован и юзер который создал данный пост должен быть тем же что и пользователь в данный момент
                 return $isAuth && ($subject->getAuthor()->getId() === $user->getId() || $this->security->isGranted('ROLE_EDITOR'));
+
             case MicroPost::VIEW:
+                if (!$subject->isExtraPrivacy())
+                {
+                    return true;
+                }
+
+                // Если пользователь Аутентифицирован и автор поста подписан на этого пользователя
+                return $isAuth && ($subject->getAuthor()->getFollows()->contains($user) or $subject->getAuthor()->getId() === $user->getId());
+
                 // logic to determine if the user can VIEW
                 // return true or false
                 // пишем return true потому что каждый может видеть пост
-                return true;
+                //return true;
         }
 
         return false;
